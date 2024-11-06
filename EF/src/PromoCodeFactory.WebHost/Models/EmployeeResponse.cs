@@ -9,7 +9,7 @@ namespace PromoCodeFactory.WebHost.Models
 
         public string Email { get; set; }
 
-        public RoleItemResponse Role { get; set; }
+        public RoleItemResponse? Role { get; set; }
 
         public int AppliedPromocodesCount { get; set; }
     }

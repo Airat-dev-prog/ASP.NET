@@ -8,8 +8,9 @@ namespace PromoCodeFactory.WebHost.Models
         public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
+        public string Email { get; set; }        
         //TODO: Добавить список предпочтений
+        public List<PrefernceResponse> PrefernceResponses { get; set; }
         public List<PromoCodeShortResponse> PromoCodes { get; set; }
     }
 }

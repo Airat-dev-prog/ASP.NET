@@ -1,4 +1,5 @@
 ﻿using PromoCodeFactory.Core.Domain;
+using PromoCodeFactory.Core.Domain.PromoCodeManagement;
 using System;
 using System.Collections.Generic;
 
@@ -17,5 +18,7 @@ namespace PromoCodeFactory.Core.Domain.Administration
         public Role Role { get; set; }
 
         public int AppliedPromocodesCount { get; set; }
+
+        public List<PromoCode> PromoCodes { get; set; }
     }
 }
