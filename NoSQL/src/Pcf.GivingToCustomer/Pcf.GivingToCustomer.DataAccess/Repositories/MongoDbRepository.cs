@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Pcf.GivingToCustomer.Core.Abstractions.Repositories;
@@ -24,20 +26,7 @@ namespace Pcf.GivingToCustomer.DataAccess.Repositories
             var mongoClient = new MongoClient(mongoDbConfiguration.Value.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase(mongoDbConfiguration.Value.DatabaseName);
             _collection = mongoDatabase.GetCollection<T>(typeof(T).Name + "s" );
-/*Удалить
-            switch (typeof(T).Name)
-            {
-                case "Customer":
-                    _collection = mongoDatabase.GetCollection<T>(mongoDbConfiguration.Value.CustomerCollectionName);
-                    break;
-                case "Preference":
-                    _collection = mongoDatabase.GetCollection<T>(mongoDbConfiguration.Value.PreferenceCollectionName);
-                    break;
-                case "PromoCode":
-                    _collection = mongoDatabase.GetCollection<T>(mongoDbConfiguration.Value.PromoCodeCollectionName);
-                    break;
-            }
-*/
+
         }
 
         public async Task AddAsync(T entity)
@@ -60,7 +49,14 @@ namespace Pcf.GivingToCustomer.DataAccess.Repositories
 
         public async Task DeleteAsync(T entity)
         {
-            await _collection.DeleteOneAsync(x => x.Id == entity.Id);
+            try
+            {
+                await _collection.DeleteOneAsync(x => x.Id == entity.Id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
@@ -75,22 +71,35 @@ namespace Pcf.GivingToCustomer.DataAccess.Repositories
 
         public async Task<T> GetFirstWhere(Expression<Func<T, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _collection.Find(predicate).SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<T>> GetRangeByIdsAsync(List<Guid> ids)
         {
-            throw new NotImplementedException();
+            return await _collection.Find(x => ids.Contains(x.Id)).ToListAsync();
         }
 
         public async Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _collection.Find(predicate).ToListAsync();
         }
 
         public async Task UpdateAsync(T entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _collection.ReplaceOneAsync(x => x.Id == entity.Id, entity);
+            }
+            catch (MongoWriteException ex)
+            {
+                if (ex.WriteError.Category == ServerErrorCategory.DuplicateKey &&
+                    ex.WriteError.Code == 11000)
+                {
+                    throw;
+                }
+
+                throw;
+            }
         }
     }
 }
