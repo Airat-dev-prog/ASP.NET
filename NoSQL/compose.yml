@@ -1,4 +1,16 @@
 services:
+  #MongoDB
+  mongo-db:
+    image: "mongo:4.2.3"
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=root
+      - MONGODB_INITDB_ROOT_PASSWORD=Password123
+      - MONGO_INITDB_DATABASE=promocode_factory_givingToCustomer_MongoDb
+    volumes:
+      - MongoDbData:/data/db
+    ports:
+      - "27017:27017"
+
   #Administration Db
   promocode-factory-administration-db:
     image: "postgres:latest"
@@ -63,3 +75,6 @@ services:
       - "ConnectionStrings:PromocodeFactoryGivingToCustomerDb=Host=promocode-factory-giving-to-customer-db;Database=promocode_factory_giving_to_customer_db;Username=postgres;Password=docker"          
     depends_on: 
       - promocode-factory-giving-to-customer-db
+
+volumes:
+  MongoDbData:

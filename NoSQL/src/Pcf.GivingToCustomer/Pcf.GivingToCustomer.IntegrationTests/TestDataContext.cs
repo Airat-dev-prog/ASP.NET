@@ -4,7 +4,7 @@ using Pcf.GivingToCustomer.DataAccess;
 namespace Pcf.GivingToCustomer.IntegrationTests
 {
     public class TestDataContext
-        : DataContext
+        : Удалить_DataContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

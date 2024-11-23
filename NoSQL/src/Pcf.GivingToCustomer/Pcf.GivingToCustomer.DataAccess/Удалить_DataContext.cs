@@ -4,7 +4,7 @@ using Pcf.GivingToCustomer.DataAccess.Data;
 
 namespace Pcf.GivingToCustomer.DataAccess
 {
-    public class DataContext
+    public class Удалить_DataContext
         : DbContext
     {
         public DbSet<PromoCode> PromoCodes { get; set; }
@@ -13,12 +13,12 @@ namespace Pcf.GivingToCustomer.DataAccess
         
         public DbSet<Preference> Preferences { get; set; }
 
-        public DataContext()
+        public Удалить_DataContext()
         {
             
         }
         
-        public DataContext(DbContextOptions<DataContext> options)
+        public Удалить_DataContext(DbContextOptions<Удалить_DataContext> options)
             : base(options)
         {
 

@@ -5,9 +5,9 @@ namespace Pcf.GivingToCustomer.DataAccess.Data
     public class EfDbInitializer
         : IDbInitializer
     {
-        private readonly DataContext _dataContext;
+        private readonly Удалить_DataContext _dataContext;
 
-        public EfDbInitializer(DataContext dataContext)
+        public EfDbInitializer(Удалить_DataContext dataContext)
         {
             _dataContext = dataContext;
         }

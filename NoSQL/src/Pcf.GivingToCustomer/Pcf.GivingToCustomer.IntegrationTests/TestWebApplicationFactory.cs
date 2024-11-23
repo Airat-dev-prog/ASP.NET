@@ -21,13 +21,13 @@ namespace Pcf.GivingToCustomer.IntegrationTests
             {
                 var descriptor = services.SingleOrDefault(
                     d => d.ServiceType ==
-                         typeof(DbContextOptions<DataContext>));
+                         typeof(DbContextOptions<Удалить_DataContext>));
 
                 services.Remove(descriptor);
 
                 services.AddScoped<INotificationGateway, NotificationGateway>();
                 
-                services.AddDbContext<DataContext>(x =>
+                services.AddDbContext<Удалить_DataContext>(x =>
                 {
                     x.UseSqlite("Filename=PromoCodeFactoryDb.sqlite");
                     //x.UseNpgsql(Configuration.GetConnectionString("PromoCodeFactoryDb"));
@@ -39,7 +39,7 @@ namespace Pcf.GivingToCustomer.IntegrationTests
 
                 using var scope = sp.CreateScope();
                 var scopedServices = scope.ServiceProvider;
-                var dbContext = scopedServices.GetRequiredService<DataContext>();
+                var dbContext = scopedServices.GetRequiredService<Удалить_DataContext>();
                 var logger = scopedServices
                     .GetRequiredService<ILogger<TestWebApplicationFactory<TStartup>>>();
                 

@@ -35,9 +35,11 @@ namespace Pcf.GivingToCustomer.WebHost
         {
             services.AddControllers().AddMvcOptions(x=> 
                 x.SuppressAsyncSuffixInActionNames = false);
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(MongoDbRepository<>));
             services.AddScoped<INotificationGateway, NotificationGateway>();
-            services.AddScoped<IDbInitializer, EfDbInitializer>();
+            //services.AddScoped<IDbInitializer, EfDbInitializer>();
+            services.Configure<MongoDbConfiguration>(Configuration.GetSection(nameof(MongoDbConfiguration)));
+            /*
             services.AddDbContext<DataContext>(x =>
             {
                 //x.UseSqlite("Filename=PromocodeFactoryGivingToCustomerDb.sqlite");
@@ -45,6 +47,7 @@ namespace Pcf.GivingToCustomer.WebHost
                 x.UseSnakeCaseNamingConvention();
                 x.UseLazyLoadingProxies();
             });
+            */
 
             services.AddOpenApiDocument(options =>
             {
@@ -54,7 +57,7 @@ namespace Pcf.GivingToCustomer.WebHost
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) //, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -80,7 +83,7 @@ namespace Pcf.GivingToCustomer.WebHost
                 endpoints.MapControllers();
             });
             
-            dbInitializer.InitializeDb();
+            //dbInitializer.InitializeDb();
         }
     }
 }

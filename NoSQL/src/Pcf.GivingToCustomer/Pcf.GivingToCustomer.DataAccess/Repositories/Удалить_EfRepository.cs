@@ -10,13 +10,13 @@ using Pcf.GivingToCustomer.Core.Domain;
 
 namespace Pcf.GivingToCustomer.DataAccess.Repositories
 {
-    public class EfRepository<T>
+    public class Удалить_EfRepository<T>
         : IRepository<T>
         where T: BaseEntity
     {
-        private readonly DataContext _dataContext;
+        private readonly Удалить_DataContext _dataContext;
 
-        public EfRepository(DataContext dataContext)
+        public Удалить_EfRepository(Удалить_DataContext dataContext)
         {
             _dataContext = dataContext;
         }

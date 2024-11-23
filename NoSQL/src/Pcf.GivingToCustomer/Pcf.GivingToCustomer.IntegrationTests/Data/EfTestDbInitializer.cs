@@ -6,9 +6,9 @@ namespace Pcf.GivingToCustomer.IntegrationTests.Data
     public class EfTestDbInitializer
         : IDbInitializer
     {
-        private readonly DataContext _dataContext;
+        private readonly Удалить_DataContext _dataContext;
 
-        public EfTestDbInitializer(DataContext dataContext)
+        public EfTestDbInitializer(Удалить_DataContext dataContext)
         {
             _dataContext = dataContext;
         }
