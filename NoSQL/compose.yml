@@ -1,30 +1,25 @@
 services:
   #MongoDB
   mongo-db:
-    image: "mongo:4.2.3"
-    environment:
-      - MONGODB_INITDB_ROOT_USERNAME=root
-      - MONGODB_INITDB_ROOT_PASSWORD=Password123
-      - MONGO_INITDB_DATABASE=promocode_factory_givingToCustomer_MongoDb
-    volumes:
-      - MongoDbData:/data/db
-    ports:
-      - "27017:27017"
-  #Mongo Express
-  mongo-express:
-    image: mongo-express
+    image: mongo:latest
+    container_name: mongo
     restart: always
     ports:
-      - 8081:8081
+      - 21017:21017
+    volumes:
+       - ./mongo-db:/data/db
+  #MongoExpress
+  mongo-exp:
+    image: mongo-express:latest
+    container_name: mongo_express
+    restart: always
     environment:
-      ME_CONFIG_MONGODB_SERVER: "mongo-db"
-      ME_CONFIG_MONGODB_ADMINUSERNAME: "root"
-      ME_CONFIG_MONGODB_ADMINPASSWORD: "Password123"
-      ME_CONFIG_MONGODB_URL: "mongodb://root:Password123@mongo-db:27017/"
-      ME_CONFIG_BASICAUTH: "false"
+      - ME_CONFIG_MONGODB_SERVER=mongo
     depends_on: 
       - mongo-db
-
+    ports:
+      - 8081:8081
+  
   #Administration Db
   promocode-factory-administration-db:
     image: "postgres:latest"

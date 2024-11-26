@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Pcf.GivingToCustomer.Core.Domain;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
+using SharpCompress.Common;
+using MongoDB.Bson;
 
 namespace Pcf.GivingToCustomer.DataAccess.Data
 {
@@ -20,14 +23,36 @@ namespace Pcf.GivingToCustomer.DataAccess.Data
         {
             mongoClient = new MongoClient(mongoDbConfiguration.Value.ConnectionString);
             mongoDatabase = mongoClient.GetDatabase(mongoDbConfiguration.Value.DatabaseName);
+
+            mongoClient.DropDatabase(mongoDatabase.DatabaseNamespace.DatabaseName);
+            
         }
+
         public void InitializeDb()
         {
+
             var PreferenceCollection = mongoDatabase.GetCollection<Preference>("Preferences");
-            //PreferenceCollection.InsertMany([.. FakeDataFactory.Preferences]);
-            
             var CustomerCollection = mongoDatabase.GetCollection<Customer>("Customers");
-            //CustomerCollection.InsertMany([.. FakeDataFactory.Customers]);
+
+            try
+            {
+                PreferenceCollection.InsertMany([.. FakeDataFactory.Preferences]);
+                CustomerCollection.InsertMany([.. FakeDataFactory.Customers]);
+            }
+            catch (MongoWriteException ex)
+            {
+                if (ex.WriteError.Category == ServerErrorCategory.DuplicateKey &&
+                    ex.WriteError.Code == 11000)
+                {
+                    throw;
+                }
+
+                throw;
+            }
+            catch(BsonSerializationException ex)
+            {
+                //throw;
+            }
         }
     }
 }
