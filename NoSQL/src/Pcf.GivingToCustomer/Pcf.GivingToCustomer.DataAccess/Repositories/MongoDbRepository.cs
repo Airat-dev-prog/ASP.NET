@@ -30,13 +30,13 @@ namespace Pcf.GivingToCustomer.DataAccess.Repositories
             var mongoDatabase = mongoClient.GetDatabase(mongoDbConfiguration.Value.DatabaseName);
             _collection = mongoDatabase.GetCollection<T>(typeof(T).Name + "s" );
 
+
             //Create Index
             var indexKeysDefinition = Builders<T>.IndexKeys.Ascending(x => x.Id);
             var indexOptions = new CreateIndexOptions();
             indexOptions.Unique = true;
             indexOptions.Name = typeof(T)+"_Id";
             _collection.Indexes.CreateOne(new CreateIndexModel<T>(indexKeysDefinition, indexOptions));
-            //Console.WriteLine(_collection.Indexes.List().ToList().Count);
         }
 
         public async Task AddAsync(T entity)

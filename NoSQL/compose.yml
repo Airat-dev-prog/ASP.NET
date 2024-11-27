@@ -2,19 +2,22 @@ services:
   #MongoDB
   mongo-db:
     image: mongo:latest
-    container_name: mongo
+    container_name: mongo-db
     restart: always
     ports:
-      - 21017:21017
+      - 27017:27017
+      #- 21017:21017
     volumes:
-       - ./mongo-db:/data/db
+       - MongoDbData:/data/db
+       - MongoDbConfig:/data/configdb
   #MongoExpress
   mongo-exp:
     image: mongo-express:latest
     container_name: mongo_express
     restart: always
     environment:
-      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_SERVER=mongo-db
+      - ME_CONFIG_MONGODB_PORT=27017
     depends_on: 
       - mongo-db
     ports:
@@ -87,3 +90,4 @@ services:
 
 volumes:
   MongoDbData:
+  MongoDbConfig:
