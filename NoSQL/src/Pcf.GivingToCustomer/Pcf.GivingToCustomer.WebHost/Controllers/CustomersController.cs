@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 using Pcf.GivingToCustomer.Core.Abstractions.Repositories;
 using Pcf.GivingToCustomer.Core.Domain;
 using Pcf.GivingToCustomer.WebHost.Mappers;
@@ -20,12 +22,14 @@ namespace Pcf.GivingToCustomer.WebHost.Controllers
     {
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Preference> _preferenceRepository;
+        private readonly IRepository<PromoCode> _promoCodesRepository;
 
         public CustomersController(IRepository<Customer> customerRepository, 
-            IRepository<Preference> preferenceRepository)
+            IRepository<Preference> preferenceRepository, IRepository<PromoCode> promoCodesRepository)
         {
             _customerRepository = customerRepository;
             _preferenceRepository = preferenceRepository;
+            _promoCodesRepository = promoCodesRepository;
         }
         
         /// <summary>
@@ -58,8 +62,18 @@ namespace Pcf.GivingToCustomer.WebHost.Controllers
         {
             var customer =  await _customerRepository.GetByIdAsync(id);
 
-            var response = new CustomerResponse(customer);
+            if (customer == null)
+                return Ok(new CustomerResponse());
 
+            if (customer.Preferences != null)
+                foreach (var item in customer.Preferences)
+                item.Preference = await _preferenceRepository.GetByIdAsync(item.PreferenceId);
+            
+            if(customer.PromoCodes != null)
+                foreach (var item in customer.PromoCodes)
+                    item.PromoCode = await _promoCodesRepository.GetByIdAsync(item.PromoCodeId);
+           
+            var response = new CustomerResponse(customer);
             return Ok(response);
         }
         
